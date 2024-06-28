@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Flask MQTT Example</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+    <script>
+        let host = "192.168.240.1";
+        let port = 8080
+        let topic = 'test/topic';
+        let mqtt;
+        async function MQTTConnect() {
+            console.log("Connecting to " + host + ":" + port);
+            mqtt = new Paho.MQTT.Client(host, port, topic);
+            var options = {
+                timeout: 3,
+                onSuccess: async function () {
+                    console.log("Connected");
+                    await mqtt.subscribe(topic);
+                },
+                onFailure: function (err) {
+                    console.log(err);
+                },
+                useSSL: false
+            };
+            await mqtt.connect(options);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            MQTTConnect();
+
+            document.getElementById("sendMsg").addEventListener("click", async function () {
+                let message = document.getElementById("message").value;
+                await mqtt.send(topic, message);
+                document.getElementById("latest_Message").innerHTML = "Latest Message: " + message;
+            })
+        })
+
+    </script>
+    <h1>Welcome to Flask MQTT Example</h1>
+    <p>This is a simple MQTT example using Flask.</p>
+    <label for="message">Enter Message:</label>
+    <input type="text" id="message" name="message"><br><br>
+    <button id="sendMsg">Send Message</button>
+    <h1>MQTT Messages</h1>
+    <div id="latest_Message">
+        Latest Message: {{ message }}
+    </div>
+</body>
+
+</html>
