@@ -1,12 +1,13 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, Response
 from flask_mqtt import Mqtt
-
+import requests
 app = Flask(__name__)
 app.config['MQTT_BROKER_URL'] = '192.168.1.124'  # Replace with your MQTT broker URL
 app.config['MQTT_BROKER_PORT'] = 1883
 app.config['MQTT_USERNAME'] = ''
 app.config['MQTT_PASSWORD'] = ''
 app.config['MQTT_REFRESH_TIME'] = 1.0
+streamurl = "192.168.1.73" #replace with streamer pi url
 
 mqtt = Mqtt(app)
 
@@ -44,6 +45,17 @@ def handle_mqtt_message(client, userdata, message):
     # Update the latest_message variable with the received message
     latest_message = payload
 
+@app.route('/video_feed')
+def video_feed():
+    stream_url = 'http://'+streamurl+':5000/video_feed'
+
+    def generate():
+        with requests.get(stream_url, stream=True) as r:
+            for chunk in r.iter_content(chunk_size=1024):
+                if chunk:
+                    yield chunk
+
+    return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

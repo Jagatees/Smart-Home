@@ -9,7 +9,7 @@
 
 <body>
     <script>
-        let host = "192.168.240.1";
+        let host = "192.168.1.124";
         let port = 8080
         let topic = 'test/topic';
         let mqtt;
@@ -43,12 +43,18 @@
     </script>
     <h1>Welcome to Flask MQTT Example</h1>
     <p>This is a simple MQTT example using Flask.</p>
-    <label for="message">Enter Message:</label>
-    <input type="text" id="message" name="message"><br><br>
-    <button id="sendMsg">Send Message</button>
-    <h1>MQTT Messages</h1>
-    <div id="latest_Message">
-        Latest Message: {{ message }}
+    <div>
+        <label for="message">Enter Message:</label>
+        <input type="text" id="message" name="message"><br><br>
+        <button id="sendMsg">Send Message</button>
+        <h1>MQTT Messages</h1>
+        <div id="latest_Message">
+            Latest Message: {{ message }}
+        </div>
+    </div>
+    <div >
+        <h1>Live Webcam Feed</h1>
+        <img style="width:50%;" src="{{ url_for('video_feed') }}">
     </div>
 </body>
 

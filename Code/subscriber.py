@@ -1,5 +1,6 @@
 import paho.mqtt.client as mqtt
 from gpiozero import RGBLED
+from gpiozero import LED
 from colorzero import Color
 import time
 
@@ -9,7 +10,7 @@ fan = LED(4)
 
 def changeLedColor(color):
   try:
-    led.setColor(color)
+    led.color = Color(color)
   except:
     print("Invalid color or action received")
 
@@ -39,11 +40,12 @@ def on_message(client, userdata, msg):
     elif(action == "off"):
       fan.off()
     else:
-      print("Unrecognized motor action");
+      print("Unrecognized motor action")
+
 
 client = mqtt.Client()
-client.connect('192.168.240.1',1883,60)
+client.connect('192.168.1.124',1883,60)
 client.on_connect = on_connect
 client.on_message = on_message
-
 client.loop_forever()
+
