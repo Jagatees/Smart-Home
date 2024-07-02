@@ -30,7 +30,7 @@ def on_message(client, userdata, msg):
     elif(action == "off"):
       led.off()
     else:
-      print("Unrecognized motor action");
+      changeLedColor(action)
 
   elif(hardware == "motor"):
     print("Turning Motor to "+ action + " state")
