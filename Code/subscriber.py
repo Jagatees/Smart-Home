@@ -28,7 +28,7 @@ def on_message(client, userdata, msg):
     if(action == "on"):
       led.on()
     elif(action == "off"):
-      fan.off()
+      led.off()
     else:
       print("Unrecognized motor action");
 
